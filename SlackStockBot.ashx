@@ -22,11 +22,11 @@ public class SlackStockBot : IHttpHandler
 
         dynamic resp = new
         {
+            text = "Information for " + quote.Name + " (" + quote.Symbol + ")",
             attachments = new[]
             {
                 new
                 {
-                    text = "Summary for " + quote.Name + " (" + quote.Symbol + ")",
                     color = positive ? "good" : "danger",
                     fields = new[]
                     {
@@ -38,26 +38,19 @@ public class SlackStockBot : IHttpHandler
                         },
                         new
                         {
-                            title = "Change",
-                            value = (string)Math.Round((decimal)quote.ChangePercent, 2).ToString(),
-                            @short = "true"
-                        }
-                    }
-                },
-                new {
-                    text = "Details for " + quote.Name + " (" + quote.Symbol + ")",
-                    color = "",
-                    fields = new[]
-                    {
-                        new
-                        {
                             title = "Market Cap",
-                            value = (string)Math.Round((decimal)quote.MarketCap, 2).ToString(),
+                            value = (string)Math.Round((decimal)quote.MarketCap, 2).ToString("C"),
                             @short = "true"
                         },
                         new
                         {
-                            title = "Change YTD",
+                            title = "Change %",
+                            value = (string)Math.Round((decimal)quote.ChangePercent, 2).ToString(),
+                            @short = "true"
+                        },
+                        new
+                        {
+                            title = "Change % YTD",
                             value = (string)Math.Round((decimal)quote.ChangePercentYTD, 2).ToString(),
                             @short = "true"
                         },
