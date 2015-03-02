@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Helpers;
+
+namespace WebApplication1
+{
+    /// <summary>
+    /// Summary description for SlackDefineBot
+    /// </summary>
+    public class SlackDefineBot : IHttpHandler
+    {
+
+        public void ProcessRequest(HttpContext context)
+        {
+            context.Response.Write("{ \"text\": \"" + Json.Decode(new WebClient().DownloadString("http://api.wordnik.com:80/v4/word.json/" + context.Request["text"].Substring(context.Request["trigger_word"].Length + 1) + "/definitions?limit=1&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"))[0].text + "\" }");
+        }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+    }
+}
