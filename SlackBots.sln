@@ -8,20 +8,20 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SlackBots", "http://localho
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_23315"
-		Debug.AspNetCompiler.PhysicalPath = "D:\git\SlackBots\"
+		Debug.AspNetCompiler.PhysicalPath = "..\SlackBots\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_23315\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_23315"
-		Release.AspNetCompiler.PhysicalPath = "D:\git\SlackBots\"
+		Release.AspNetCompiler.PhysicalPath = "..\SlackBots\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_23315\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "D:\git\SlackBots\"
+		SlnRelativePath = "..\SlackBots\"
 	EndProjectSection
 EndProject
 Global
