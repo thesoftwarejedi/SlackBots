@@ -27,15 +27,15 @@ public class SlackDriveTimeBot : IHttpHandler
 
                 if (minutes > (120 * 60))
                 {
-                    text = "83 SUCKS!  " + time + " is excessive, might as well just stay.";
+                    text = "83 SUCKS!  " + time + " is excessive! You might as well just stay.";
                 }
                 else if (minutes > (45 * 60))
                 {
-                    text = "Ali's drive home is about average, just think what you could do with " + time + " extra in your day!";
+                    text = "Ali's drive home is about average. Just think what you could do with " + time + " extra in your day!";
                 }
                 else
                 {
-                    text = "Ali's drive home is " + time + ", stick around you have plenty of time to get home.";
+                    text = "Ali's drive home is " + time + ". Stick around! You have plenty of time to get home.";
                 }
             }
             else if (string.Equals(keyword, "dana", StringComparison.CurrentCultureIgnoreCase))
@@ -60,7 +60,7 @@ public class SlackDriveTimeBot : IHttpHandler
         }
         catch (Exception)
         {
-            text = "Your locations does not exist";
+            text = "Your location does not exist";
         }
 
         context.Response.Write(Json.Encode(new
