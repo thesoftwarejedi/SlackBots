@@ -17,15 +17,7 @@ public class SlackDriveTimeBot : IHttpHandler
 
         try
         {
-            if (!string.Equals(keyword, "ali", StringComparison.CurrentCultureIgnoreCase))
-            {
-                var url = string.Format("https://maps.googleapis.com/maps/api/distancematrix/json?origins=400%20E%20Pratt,%20Baltimore%20MD&destinations={1}|MD&mode=driving&key={0}", key, keyword);
-                var drive = Json.Decode(new WebClient().DownloadString(url));
-
-                var time = drive.rows[0].elements[0].duration.text.ToString();
-                text = "Your commute home should be around " + time;
-            }
-            else
+            if (string.Equals(keyword, "ali", StringComparison.CurrentCultureIgnoreCase))
             {
                 var url = string.Format("https://maps.googleapis.com/maps/api/distancematrix/json?origins=400%20E%20Pratt,%20Baltimore%20MD&destinations=Hunt%20Valley|MD&mode=driving&key={0}", key);
                 var drive = Json.Decode(new WebClient().DownloadString(url));
@@ -45,6 +37,24 @@ public class SlackDriveTimeBot : IHttpHandler
                 {
                     text = "Ali's drive home is " + time + ", stick around you have plenty of time to get home.";
                 }
+            }
+            else if (string.Equals(keyword, "dana", StringComparison.CurrentCultureIgnoreCase))
+            {
+                context.Response.Write(Json.Encode(new
+                {
+                    icon_emoji = ":walking:",
+                    text = "Your commute home should be around 6 minutes."
+                }));
+
+                return;
+            }
+            else
+            {
+                var url = string.Format("https://maps.googleapis.com/maps/api/distancematrix/json?origins=400%20E%20Pratt,%20Baltimore%20MD&destinations={1}|MD&mode=driving&key={0}", key, keyword);
+                var drive = Json.Decode(new WebClient().DownloadString(url));
+
+                var time = drive.rows[0].elements[0].duration.text.ToString();
+                text = "Your commute home should be around " + time;
             }
 
         }
