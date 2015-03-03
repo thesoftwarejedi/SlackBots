@@ -1,6 +1,7 @@
 ﻿<%@ WebHandler Language="C#" Class="SlackDriveTimeBot" %>
 
 using System;
+using System.Configuration;
 using System.Net;
 using System.Web;
 using System.Web.Helpers;
@@ -11,7 +12,7 @@ public class SlackDriveTimeBot : IHttpHandler
     public void ProcessRequest(HttpContext context)
     {
         var keyword = context.Request["text"].Substring(context.Request["trigger_word"].Length + 1);
-        const string key = "AIzaSyBuoiiQ0krozKVpkARF_lxb_-6yvmqQPp4";
+        var key = ConfigurationManager.AppSettings["MapAPIKey"];
 
         if (keyword == "Ali")
         {
