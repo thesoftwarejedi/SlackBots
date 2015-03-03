@@ -26,7 +26,7 @@ public class SlackDriveTimeBot : IHttpHandler
 
                 if (minutes > (120 * 60))
                 {
-                    text = "83 SUCKS! Ali's drive home will be updated on facebook,  " + time + " is excessive, might as well just stay.";
+                    text = "83 SUCKS!  " + time + " is excessive, might as well just stay.";
                 }
                 else if (minutes > (45 * 60))
                 {
