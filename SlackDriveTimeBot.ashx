@@ -60,8 +60,8 @@ public class SlackDriveTimeBot : IHttpHandler
             
             try
             {
-                var minutes = (int)drive.rows[0].elements[0].duration.value;
-                text = "Your commute home should be around " + minutes;
+                var time = drive.rows[0].elements[0].duration.text.ToString();
+                text = "Your commute home should be around " + time;
             }
             catch (Exception)
             {
