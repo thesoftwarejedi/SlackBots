@@ -39,19 +39,19 @@ public class SlackWeatherBot : IHttpHandler {
                         new
                         {
                             title = "Current Temp",
-                            value = weather.main.temp + "&deg;F",
+                            value = weather.main.temp + "\u00B0F",
                             @short = "true"
                         },
                         new
                         {
                             title = "High",
-                            value = weather.main.temp_max + "&deg:F",
+                            value = weather.main.temp_max + "\u00B0F",
                             @short = "true"
                         },
                         new
                         {
                             title = "Low",
-                            value = weather.main.temp_min + "&deg:F",
+                            value = weather.main.temp_min + "\u00B0F",
                             @short = "true"
                         }
                     }
