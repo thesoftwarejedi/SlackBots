@@ -5,3 +5,4 @@ A bot to :
 - show stock prices
 - define words
 - give commute times
+- give current weather conditions
