@@ -11,6 +11,9 @@ public class SlackWeatherBot : IHttpHandler {
         var location = "Baltimore, MD";
         if (context.Request["text"] != context.Request["trigger_word"])
             location = context.Request["text"].Substring(context.Request["trigger_word"].Length + 1);
+
+        location = DoKeywordReplacements(location);
+
         var weatherUrl = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=imperial", HttpUtility.UrlEncode(location));
         var weatherIcon = "http://openweathermap.org/img/w/";
         var weather = Json.Decode(new WebClient().DownloadString(weatherUrl));
@@ -60,9 +63,17 @@ public class SlackWeatherBot : IHttpHandler {
         }));
     }
 
+    private string DoKeywordReplacements(string location)
+    {
+        var testLocation = location.ToLower().Trim();
+        if (testLocation == "stl" || testLocation == "eric") location = "st louis, mo";
+        else if (testLocation == "bmore" || testLocation == "balt") location = "baltimore, md";
+        return location;
+    }
+
     public bool IsReusable {
         get {
-            return false;
+            return true;
         }
     }
 
