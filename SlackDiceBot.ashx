@@ -11,13 +11,14 @@ using System.Web.Helpers;
 public class SlackDiceBot : IHttpHandler
 {
     const int Sides = 6;
+    const int MaxRolls = 100;
 
     public void ProcessRequest(HttpContext context)
     {
         uint max = 1;
-        if (!uint.TryParse(context.Request["text"].Substring(context.Request["trigger_word"].Length + 1), out max) || max == 0)
+        if (!uint.TryParse(context.Request["text"].Substring(context.Request["trigger_word"].Length + 1), out max) || max == 0 || max > MaxRolls)
         {
-            context.Response.Write("{ \"text\": \"" + "Try again with a whole number greater than 0." + "\" }");
+            context.Response.Write("{ \"text\": \"" + String.Format("Try again with a whole number between 1 and {0}.", MaxRolls) + "\" }");
             return;
         }
 
