@@ -26,7 +26,7 @@ public class SlackDiceBot : IHttpHandler
         var rolls = new List<int>();
 
         for (var i = 0; i < max; i++)
-            rolls.Add(rand.Next(1, Sides));
+            rolls.Add(rand.Next(1, Sides+1));
 
         var result = String.Format("Avg {0} of {1} total rolls ({2}).", rolls.Average(), rolls.Count, String.Join(", ", rolls.Select(e => e.ToString())));
 
