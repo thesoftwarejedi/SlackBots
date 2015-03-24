@@ -23,7 +23,7 @@ public class SlackDiceBot : IHttpHandler
 
         var rand = new Random();
         var rolls = new List<int>();
-        
+
         for (var i = 0; i < max; i++)
             rolls.Add(rand.Next(1, Sides));
 
@@ -32,5 +32,5 @@ public class SlackDiceBot : IHttpHandler
         context.Response.Write("{ \"text\": \"" + result + "\" }");
     }
 
-    public bool IsReusable => true;
+    public bool IsReusable { get { return true; } }
 }
