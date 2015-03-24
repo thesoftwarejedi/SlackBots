@@ -7,3 +7,4 @@ A bot to :
 - give commute times
 - give current weather conditions
 - roll dice a number of times specified
+- ask a yes or no question fortune teller
