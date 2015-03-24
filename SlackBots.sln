@@ -24,13 +24,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SlackBots", "http://localho
 		SlnRelativePath = "..\SlackBots\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{7A8EA0A0-D50B-45AA-B510-2EE130F34EFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4CC4C55C-7F32-412E-881C-67C4C0C903F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4CC4C55C-7F32-412E-881C-67C4C0C903F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CC4C55C-7F32-412E-881C-67C4C0C903F0}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CC4C55C-7F32-412E-881C-67C4C0C903F0}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{7A8EA0A0-D50B-45AA-B510-2EE130F34EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A8EA0A0-D50B-45AA-B510-2EE130F34EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A8EA0A0-D50B-45AA-B510-2EE130F34EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A8EA0A0-D50B-45AA-B510-2EE130F34EFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

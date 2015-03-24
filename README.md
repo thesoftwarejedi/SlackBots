@@ -6,3 +6,4 @@ A bot to :
 - define words
 - give commute times
 - give current weather conditions
+- roll dice a number of times specified
