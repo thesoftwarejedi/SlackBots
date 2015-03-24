@@ -17,7 +17,7 @@ public class SlackDiceBot : IHttpHandler
         uint max = 1;
         if (!uint.TryParse(context.Request["text"].Substring(context.Request["trigger_word"].Length + 1), out max) || max == 0)
         {
-            context.Response.Write("{ \"text\": \"" + "Try again with a value greater than 0." + "\" }");
+            context.Response.Write("{ \"text\": \"" + "Try again with a whole number greater than 0." + "\" }");
             return;
         }
 
