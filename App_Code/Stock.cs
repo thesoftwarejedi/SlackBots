@@ -1,37 +1,38 @@
-﻿<%@ WebHandler Language="C#" Class="SlackStockBot" %>
-
-using System;
-using System.Dynamic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Helpers;
-using System.Collections.Generic;
 
-public class SlackStockBot : IHttpHandler
+/// <summary>
+/// Summary description for Stock
+/// </summary>
+public class Stock : SlackBotHandler
 {
-
-    public void ProcessRequest(HttpContext context)
+    public override string TriggerWord { get { return "stock"; } }
+    public override string Process(string text)
     {
-        var stock = context.Request["text"].Substring(context.Request["trigger_word"].Length + 1);
-
-        if (stock == ":btc:")
+        if (text == ":btc:")
         {
             var url = "https://btc-e.com/api/3/ticker/btc_usd";
             var quote = Json.Decode(new WebClient().DownloadString(url));
-            context.Response.Write(Json.Encode(new
-            {
-                text = "Bitcon last traded on BTC-e for $" + quote.btc_usd.last
-            }));
-            return;
+            return "Bitcon last traded on BTC-e for $" + quote.btc_usd.last;
         }
         else
         {
             var url = "http://dev.markitondemand.com/Api/v2/Quote/json";
             var wc = new WebClient();
-            wc.Headers["Content-type"] = "application/x-www-form-urlencoded";
-            var quote = Json.Decode(wc.UploadString(url, "symbol=" + stock));
+            var quote = Json.Decode(wc.DownloadString(url + "/?symbol=" + text));
 
             bool positive = quote.ChangePercent >= 0;
+
+            if (quote.LastPrice == null) quote.LastPrice = 0d;
+            if (quote.MarketCap == null) quote.MarketCap = 0d;
+            if (quote.ChangePercent == null) quote.ChangePercent = 0d;
+            if (quote.ChangePercentYTD == null) quote.ChangePercentYTD = 0d;
+            if (quote.High == null) quote.High = 0d;
+            if (quote.Low == null) quote.Low = 0d;
 
             dynamic resp = new
             {
@@ -85,17 +86,7 @@ public class SlackStockBot : IHttpHandler
             };
 
             var respString = Json.Encode(resp);
-            context.Response.Write(respString);
-            return;
+            return respString;
         }
     }
-
-    public bool IsReusable
-    {
-        get
-        {
-            return true;
-        }
-    }
-
 }

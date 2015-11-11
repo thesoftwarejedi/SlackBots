@@ -1,37 +1,41 @@
-﻿<%@ WebHandler Language="C#" Class="SlackWeatherBot" %>
-
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Helpers;
 
-public class SlackWeatherBot : IHttpHandler {
+/// <summary>
+/// Summary description for Weather
+/// </summary>
+public class Weather : SlackBotHandler
+{
+    public override string TriggerWord { get { return "weather"; } }
+    public override string Process(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            text = "Baltimore, MD";
 
-    public void ProcessRequest (HttpContext context) {
-        var location = "Baltimore, MD";
-        if (context.Request["text"] != context.Request["trigger_word"])
-            location = context.Request["text"].Substring(context.Request["trigger_word"].Length + 1);
+        text = DoKeywordReplacements(text);
 
-        location = DoKeywordReplacements(location);
-
-        var weatherUrl = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=imperial", HttpUtility.UrlEncode(location));
+        var weatherUrl = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=imperial", HttpUtility.UrlEncode(text));
         var weatherIcon = "http://openweathermap.org/img/w/";
         var weather = Json.Decode(new WebClient().DownloadString(weatherUrl));
 
-        var text = "Current conditions for " + weather.name;
+        var title = "Current conditions for " + weather.name;
         var icon_url = weatherIcon + weather.weather[0].icon + ".png";
         var positive = true;
 
-        context.Response.Write(Json.Encode(new
+        return Json.Encode(new
         {
-            text = text,
+            text = title,
             icon_url = icon_url,
             attachments = new[]
             {
                 new
                 {
                     color = positive ? "good" : "danger",
-                    fields = new[]
+                    fields = new []
                     {
                         new
                         {
@@ -60,7 +64,7 @@ public class SlackWeatherBot : IHttpHandler {
                     }
                 }
             }
-        }));
+        });
     }
 
     private string DoKeywordReplacements(string location)
@@ -70,11 +74,4 @@ public class SlackWeatherBot : IHttpHandler {
         else if (testLocation == "bmore" || testLocation == "balt") location = "baltimore, md";
         return location;
     }
-
-    public bool IsReusable {
-        get {
-            return true;
-        }
-    }
-
 }
