@@ -10,15 +10,17 @@ using System.Web.Helpers;
 /// </summary>
 public class Weather : SlackBotHandler
 {
-    public override string TriggerWord { get { return "weather"; } }
+    public override string[] TriggerWords { get { return new string[] { "@weather" }; } }
+    public override string BotName { get { return "Weather"; } }
+    public override string Emoji { get { return ":game_die:"; } }
     public override string Process(string text)
     {
         if (string.IsNullOrEmpty(text))
             text = "Baltimore, MD";
 
         text = DoKeywordReplacements(text);
-
-        var weatherUrl = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=imperial", HttpUtility.UrlEncode(text));
+         
+        var weatherUrl = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=imperial&APPID={1}", HttpUtility.UrlEncode(text), System.Configuration.ConfigurationManager.AppSettings["WeatherAPIKey"]);
         var weatherIcon = "http://openweathermap.org/img/w/";
         var weather = Json.Decode(new WebClient().DownloadString(weatherUrl));
 

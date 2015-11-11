@@ -10,7 +10,9 @@ using System.Web.Helpers;
 /// </summary>
 public class Define : SlackBotHandler
 {
-    public override string TriggerWord { get { return "define"; } }
+    public override string[] TriggerWords { get { return new string[] { "@define" }; } }
+    public override string BotName { get { return "Dictionary"; } }
+    public override string Emoji { get { return ":book:"; } }
     public override string Process(string text)
     {
         try

@@ -10,7 +10,9 @@ public class Dice : SlackBotHandler
 {
     const int Sides = 6;
     const int MaxRolls = 100;
-    public override string TriggerWord { get { return "dice"; } }
+    public override string[] TriggerWords { get { return new string[] { "@dice" }; } }
+    public override string BotName { get { return "Dice"; } }
+    public override string Emoji { get { return ":game_die:"; } }
     public override string Process(string text)
     {
         uint max = 1;

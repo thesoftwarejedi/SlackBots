@@ -11,11 +11,14 @@ using System.Web.Helpers;
 /// </summary>
 public class DriveTime : SlackBotHandler
 {
-    public override string TriggerWord { get { return "traffic"; } }
+    public override string[] TriggerWords { get { return new string[] { "@drive", "@drivetime", "@traffic" }; } }
+    public override string BotName { get { return "Traffic"; } }
+    public override string Emoji { get { return ":traffic_light:"; } }
     public override string Process(string text)
     {
         var key = ConfigurationManager.AppSettings["MapAPIKey"];
         var ret = string.Empty;
+        var resp = string.Empty;
 
         try
         {
@@ -50,17 +53,81 @@ public class DriveTime : SlackBotHandler
             }
             else
             {
-                var url = string.Format("https://maps.googleapis.com/maps/api/distancematrix/json?origins=400%20E%20Pratt,%20Baltimore%20MD&destinations={1}|MD&mode=driving&key={0}", key, text);
-                var drive = Json.Decode(new WebClient().DownloadString(url));
+                var url = string.Format("https://maps.googleapis.com/maps/api/distancematrix/json?origins=400%20E%20Pratt,%20Baltimore%20MD&destinations={0}&mode=driving&units=imperial", HttpUtility.UrlEncode(text));
+                resp = new WebClient().DownloadString(url);
+                var drive = Json.Decode(resp);
 
                 var time = drive.rows[0].elements[0].duration.text.ToString();
-                ret = "Your commute home should be around " + time;
+                var distance = drive.rows[0].elements[0].distance.text.ToString();
+                ret = string.Format("Your commute of {0} should be around {1}", distance, time);
+                /*
+                ret = Json.Encode(new
+                {
+                    username = this.BotName,
+                    icon_emoji = this.Emoji,
+                    text = string.Format("Your commute of {0} should be around {1}", distance, time),
+                    attachments = new[]
+                    {
+                        new
+                        {
+                            fields = new[]
+                            {
+                                new
+                                {
+                                    title = "Trigger Word",
+                                    value = HttpContext.Current.Request["trigger_word"],
+                                    @short = false
+                                },
+                                new
+                                {
+                                    title = "Trigger Text",
+                                    value = HttpContext.Current.Request["text"],
+                                    @short = false
+                                },
+                                new
+                                {
+                                    title = "Text",
+                                    value = text,
+                                    @short = false
+                                },
+                                new
+                                {
+                                    title = "Response",
+                                    value = resp,
+                                    @short = false
+                                }
+                            }
+                        }
+                    }
+                });
+                */
             }
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            ret = "Your location does not exist";
+            ret = Json.Encode(new
+            {
+                username = this.BotName,
+                icon_emoji = ":boom:",
+                text = "ERROR - " + ex.Message,
+                attachments = new[]
+                {
+                    new
+                    {
+                        color = "danger",
+                        fields = new []
+                        {
+                            new
+                            {
+                                title = "Response",
+                                value = resp,
+                                @short = "false"
+                            }
+                        }
+                    }
+                }
+            });                
         }
 
         return ret;

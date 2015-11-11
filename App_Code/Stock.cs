@@ -10,7 +10,9 @@ using System.Web.Helpers;
 /// </summary>
 public class Stock : SlackBotHandler
 {
-    public override string TriggerWord { get { return "stock"; } }
+    public override string[] TriggerWords { get { return new string[] { "@stock", "@stockbot", "@quote", "@quotebot" }; } }
+    public override string BotName { get { return "Stock"; } }
+    public override string Emoji { get { return ":money_mouth_face:"; } }
     public override string Process(string text)
     {
         if (text == ":btc:")
@@ -36,6 +38,8 @@ public class Stock : SlackBotHandler
 
             dynamic resp = new
             {
+                username = this.BotName,
+                icon_emoji = this.Emoji,
                 text = "Information for " + quote.Name + " (" + quote.Symbol + ")",
                 attachments = new[]
             {

@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Helpers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Configuration;
+using System.Text.RegularExpressions;
 
 public class SlackBotListener : IHttpHandler
 {
@@ -22,7 +24,10 @@ public class SlackBotListener : IHttpHandler
                 {
                     var handler = Activator.CreateInstance(type) as SlackBotHandler;
                     if (handler != null)
-                        _handlers.Add(handler.TriggerWord, handler);
+                    {
+                        foreach(var word in handler.TriggerWords)
+                            _handlers.Add(word.ToLower(), handler);
+                    }
                 }
 
             }
@@ -32,31 +37,57 @@ public class SlackBotListener : IHttpHandler
 
     public void ProcessRequest (HttpContext context)
     {
-        var trigger = context.Request["trigger_word"];
+        var token = context.Request["token"];
+        if (token != ConfigurationManager.AppSettings["SlackToken"])
+        {
+            context.Response.Clear();
+            context.Response.StatusCode = 403;
+            return;
+        }
+
+        var trigger = context.Request["trigger_word"].ToLower();
+        var team_id = context.Request["team_id"];
+        var team_domain = context.Request["team_domain"];
+        var channel_id = context.Request["channel_id"];
+        var channel_name = context.Request["channel_name"];
+        var user_id = context.Request["user_id"];
+        var user_name = context.Request["user_name"];
+
         var resp = string.Empty;
         var text = string.Empty;
 
-        if (string.IsNullOrEmpty(trigger))
-            resp = "missing trigger";
+        var handler = (SlackBotHandler)null;
+
+        if (Handlers.TryGetValue(trigger, out handler))
+        {
+            if (context.Request["text"] != trigger)
+            {
+                var rx = string.Join("|", handler.TriggerWords.Select(w => w + "\\s"));
+                text = Regex.Replace(context.Request["text"], rx, string.Empty, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            }
+
+            resp = handler.Process(text);
+            if (resp.StartsWith("{"))
+                context.Response.Write(resp);
+            else
+                context.Response.Write(Json.Encode(new
+                {
+                    username = handler.BotName,
+                    icon_emoji = handler.Emoji,
+                    text = resp
+                }));
+        }
         else
         {
-            var handler = (SlackBotHandler)null;
-
-            if (Handlers.TryGetValue(trigger, out handler))
+            context.Response.Write(Json.Encode(new
             {
-                if (context.Request["text"] != context.Request["trigger_word"])
-                    text = context.Request["text"].Substring(context.Request["trigger_word"].Length + 1);
-
-                resp = handler.Process(text);
-            }
-            else
-            {
-                resp = string.Format("Invalid trigger word '{0}'. Only valid for [{1}]", trigger, string.Join(", ", Handlers.Keys));
-            }
+                username = "R2i Bot",
+                icon_emoji = ":r2i:",
+                text = string.Format("Invalid trigger word '{0}'. Only valid for [{1}]", trigger, string.Join(", ", Handlers.Keys))
+            }));
         }
-        context.Response.Write(Json.Encode(new { text = resp })); //, trigger = trigger, keyword = text }));
     }
 
-public bool IsReusable { get { return false; } }
+    public bool IsReusable { get { return false; } }
 
 }

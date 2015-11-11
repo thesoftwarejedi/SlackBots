@@ -34,7 +34,9 @@ public class GoodMorning : SlackBotHandler
             return ret;
         }
     }
-    public override string TriggerWord { get { return "good morning"; } }
+    public override string[] TriggerWords { get { return new string[] { "good morning" }; } }
+    public override string BotName { get { return "Good Morning To You Too"; } }
+    public override string Emoji { get { return ":sunrise:"; } }
     public override string Process(string text)
     {
         var html = new HtmlDocument();
@@ -43,7 +45,7 @@ public class GoodMorning : SlackBotHandler
         html.LoadHtml(GoodMorningHTML);
 
         var rows = html.DocumentNode.QuerySelector("#unicode").QuerySelectorAll("tr");
-        var rnd = random.Next(1, rows.Count() - 1);
+        var rnd = random.Next(1, rows.Count() - 1);        
         var row = rows.Skip(rnd).First();
         var languageCell = row.QuerySelector("td:first-child");
         var language = string.Empty;
@@ -89,24 +91,6 @@ public class GoodMorning : SlackBotHandler
         if (string.IsNullOrEmpty(translation))
             return null;
 
-        return Json.Encode(new
-        {
-            text = translation,
-            attachments = new[]
-            {
-                new
-                {
-                    fields = new[]
-                    {
-                        new
-                        {
-                            title = "Language",
-                            value = language,
-                            @short = "true"
-                        }
-                    }
-                }
-            }
-        });
+        return string.Format("{0} (_{1}_)", HttpUtility.HtmlDecode(translation), language);
     }
 }
