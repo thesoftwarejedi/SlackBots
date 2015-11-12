@@ -60,8 +60,11 @@ public class DriveTime : SlackBotHandler
                 var status = drive.rows[0].elements[0].status.ToString();
                 if (status == "ZERO_RESULTS")
                 {
-                    ret = string.Format("Sorry... {0} must not be real place", text);
+                    var dest = (drive.destination_addresses.length > 0 ? drive.destination_addresses[0].ToString() : text);
+                    ret = string.Format("Looks like you cannot drive to {0}", dest);
                 }
+                else if (status == "NOT_FOUND")
+                    ret = string.Format("Sorry... {0} must not be real place", text);
                 else
                 {
                     var time = drive.rows[0].elements[0].duration.text.ToString();
