@@ -57,9 +57,17 @@ public class DriveTime : SlackBotHandler
                 resp = new WebClient().DownloadString(url);
                 var drive = Json.Decode(resp);
 
-                var time = drive.rows[0].elements[0].duration.text.ToString();
-                var distance = drive.rows[0].elements[0].distance.text.ToString();
-                ret = string.Format("Your commute of {0} should be around {1}", distance, time);
+                var status = drive.rows[0].elements[0].status.ToString();
+                if (status == "ZERO_RESULTS")
+                {
+                    ret = string.Format("Sorry... {0} must not be real place", text);
+                }
+                else
+                {
+                    var time = drive.rows[0].elements[0].duration.text.ToString();
+                    var distance = drive.rows[0].elements[0].distance.text.ToString();
+                    ret = string.Format("Your commute of {0} should be around {1}", distance, time);
+                }
                 /*
                 ret = Json.Encode(new
                 {
