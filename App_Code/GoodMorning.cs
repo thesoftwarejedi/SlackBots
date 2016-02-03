@@ -51,9 +51,9 @@ public class GoodMorning : SlackBotHandler
         var language = string.Empty;
 
         if (languageCell.QuerySelector("a") != null)
-            language = Regex.Replace(languageCell.QuerySelector("a").InnerHtml.Replace("\n", "").Trim(), @"<br[^>]*>", " ");
+            language = Regex.Replace(HttpUtility.HtmlDecode(languageCell.QuerySelector("a").InnerHtml).Replace("\n", "").Trim(), @"<br[^>]*>", " ");
         else
-            language = Regex.Replace(languageCell.InnerHtml.Replace("\n", "").Trim(), @"<br[^>]*>", " ");
+            language = Regex.Replace(HttpUtility.HtmlDecode(languageCell.InnerHtml).Replace("\n", "").Trim(), @"<br[^>]*>", " ");
         if (string.IsNullOrEmpty(language))
             return null;
 
