@@ -15,7 +15,7 @@ public class Joke : SlackBotHandler
 {
     public override string[] TriggerWords { get { return new string[] { "@joke" }; } }
     public override string BotName { get { return "A Joke for Everyday"; } }
-    public override string Emoji { get { return ":joy: :smiley: "; } }
+    public override string Emoji { get { return ":joy:"; } }
 
     string feedURL = "";
     XmlDocument JokesFeedData
@@ -55,8 +55,10 @@ public class Joke : SlackBotHandler
             
             var jokeDescriptionNode = jokes[rnd1].SelectSingleNode("description");
             string description = jokeDescriptionNode != null ? jokeDescriptionNode.InnerText : "";
-            
-            return Regex.Replace(description, @"<br[^>]*>", " "); //string.Format("{0}", HttpUtility.HtmlDecode(description));
+            description=description.Replace("<div style=\"background: #FAFAFA; border: 1px solid #DDD; padding: 4px; margin-bottom: 5px; font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif; font-size: 14px;\"><div style=\"margin-left: 5px;\">","");
+            description = description.Replace("<br />", "\n");
+            description = StripHTML(description.Substring(0, description.IndexOf("</div>"))); //StripHTML(description.Substring(description.IndexOf("<div>")+5, description.IndexOf("</div>")).Replace("<br />","char(13)")); //Regex.Replace(description, @"<br[^>]*>", " "); //string.Format("{0}", HttpUtility.HtmlDecode(description));
+			return string.Format("{0}", HttpUtility.HtmlDecode(description));
 
 
         }
@@ -65,13 +67,8 @@ public class Joke : SlackBotHandler
             return ex.ToString();
         }
     }
-    private string GetAlbumRSS(SyndicationItem album)
+    public static string StripHTML(string source)
     {
-
-        string url = "";
-        foreach (SyndicationElementExtension ext in album.ElementExtensions)
-            if (ext.OuterName == "itemRSS") url = ext.GetObject<string>();
-        return (url);
-
+        return Regex.Replace(source, "<.*?>", string.Empty);
     }
 }
